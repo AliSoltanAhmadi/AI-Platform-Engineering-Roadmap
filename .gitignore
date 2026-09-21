@@ -1,0 +1,63 @@
+# ============================================================
+# AI Platform Engineering Roadmap — .gitignore
+# Root-level ignore rules for this documentation repo.
+# ============================================================
+
+
+# --- Global / universal ignores -------------------------------------------
+
+# Editor & OS files
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+settings.xml
+
+# Local environment
+.env
+.env.*
+.env.local
+venv/
+env/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+
+# Build artifacts
+build/
+dist/
+out/
+target/
+
+
+# --- Cline (AI coding agent) state -----------------------------------------
+
+.git/
+*.log
+cline-logs.jsonl
+references.md
+refs/cline/            # Cline's local branch/metadata refs
+*.checkpoint
+.cline_state
+.clinerules
+
+# --- Specify / Speckit project artifacts ------------------------------------
+# .specify/ holds BOTH shared templates AND machine-local state.
+# Only the private parts below are ignored; workflows/templates/manifolds
+# in this directory ARE tracked, so do not ignore the whole folder.
+
+.specify
+
+# Shared Specify assets below ARE tracked — keep them out of the ignore.
+!.specify/templates/
+!.specify/workflows/
+!.specify/integrations/*.manifest.json
+
+
+# --- Markdown / notes helpers ----------------------------------------------
+
+*.tmp.md
+notes/.cache/
+
