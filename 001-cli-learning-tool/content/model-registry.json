@@ -1,0 +1,16 @@
+{
+  "feature": "Interactive CLI AI Platform Engineering Learning Tool",
+  "schema_version": "1.0.0",
+  "backends": [
+    {
+      "backend": "Ollama",
+      "capability_level": "beginner",
+      "default_model": "llama3.2"
+    },
+    {
+      "backend": "vLLM",
+      "capability_level": "experienced",
+      "default_model": "meta-llama/Llama-3.1-8B"
+    }
+  ]
+}

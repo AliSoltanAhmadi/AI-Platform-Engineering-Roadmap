@@ -49,6 +49,9 @@ refs/cline/            # Cline's local branch/metadata refs
 # in this directory ARE tracked, so do not ignore the whole folder.
 
 .specify
+specs
+# Per-feature tool runtime state (plain JSON, single-user, local-only).
+specs/**/.local/state/progress.json
 
 # Shared Specify assets below ARE tracked — keep them out of the ignore.
 !.specify/templates/
@@ -61,3 +64,5 @@ refs/cline/            # Cline's local branch/metadata refs
 *.tmp.md
 notes/.cache/
 
+*~
+__pycache__/
