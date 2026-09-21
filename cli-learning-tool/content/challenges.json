@@ -1,0 +1,54 @@
+{
+  "feature": "Interactive CLI AI Platform Engineering Learning Tool",
+  "schema_version": "1.0.0",
+  "challenges": [
+    {
+      "id": "challenge-pull-image",
+      "topic_id": "p0-bridge-docker-compose-fastapi",
+      "prompt": "Enter the command to pull a public image from a registry:",
+      "acceptance_patterns": ["^docker pull", "^podman pull"],
+      "feedback_correct": "Correct — you pulled the image into your local container runtime.",
+      "feedback_hint": "Hint: use `docker pull <image>` (or `podman pull`). Arguments and tool name are optional; just include a verb like pull."
+    },
+    {
+      "id": "challenge-pod-command",
+      "topic_id": "p0-bridge-pod-deployment-service",
+      "prompt": "Enter the command to run a container from an image:",
+      "acceptance_patterns": ["^docker run"],
+      "feedback_correct": "Correct — you started a new Pod by running the container.",
+      "feedback_hint": "Hint: use `docker run <image>`. Arguments are optional; just include the word run."
+    },
+    {
+      "id": "challenge-pandas-load",
+      "topic_id": "p1-ml-literacy-python",
+      "prompt": "Enter the Python command to load a CSV file into memory:",
+      "acceptance_patterns": ["^df = pd.read_csv", "^import pandas as pd"],
+      "feedback_correct": "Correct — you loaded your dataset with pandas.",
+      "feedback_hint": "Hint: use `pd.read_csv('file.csv')`, assigning it to a variable named df."
+    },
+    {
+      "id": "challenge-dvc-add",
+      "topic_id": "p2-mlops-dvc",
+      "prompt": "Enter the DVC command to add a dataset for version control:",
+      "acceptance_patterns": ["^dvc add"],
+      "feedback_correct": "Correct — you tracked your data with DVC.",
+      "feedback_hint": "Hint: run `dvc add data.csv` (or your file name)."
+    },
+    {
+      "id": "challenge-argo-workflow",
+      "topic_id": "p3-k8s-argoworkflows",
+      "prompt": "Enter the kubectl command to apply an Argo Workflow manifest:",
+      "acceptance_patterns": ["^kubectl apply -f"],
+      "feedback_correct": "Correct — you deployed your training Job via Argo.",
+      "feedback_hint": "Hint: run `kubectl apply -f workflow.yaml`."
+    },
+    {
+      "id": "challenge-vllm-launch",
+      "topic_id": "p4-llmops-vllm",
+      "prompt": "Enter the command to start a vLLM server on a model:",
+      "acceptance_patterns": ["^python -m vllm.entrypoints.openai.api_server"],
+      "feedback_correct": "Correct — you launched your vLLM inference server.",
+      "feedback_hint": "Hint: run `python -m vllm.entrypoints.openai.api_server --model <name>`."
+    }
+  ]
+}

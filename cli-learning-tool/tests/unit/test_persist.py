@@ -1,0 +1,1 @@
+﻿# Unit Test: Session Persistence Layer`n# Tests read/write operations for .local/state/progress.json`n`nFeature: Interactive CLI AI Platform Engineering Learning Tool`nPhase 2 Foundational - TDD Order (tests first)`nCreated: 2026-09-21
