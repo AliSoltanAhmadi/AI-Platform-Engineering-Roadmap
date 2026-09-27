@@ -40,8 +40,8 @@ def test_cli_empty_answer_does_not_complete(tmp_path):
     state_path = tmp_path / ".local" / "state" / "progress.json"
 
     result = _run_learn(repo_root, tmp_path, state_path, "")
-    assert result.returncode == 2, result.stderr
-    assert "Incorrect." in result.stdout
+    assert result.returncode == 64, result.stderr
+    assert "No answer provided." in result.stdout
     data = json.loads(state_path.read_text(encoding="utf-8"))
     assert data["completed"] == []
 

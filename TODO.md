@@ -20,19 +20,19 @@
 
 ### T001 — راه‌انداز واقعی `learn start`
 
-- [ ] یک installer یا setup کم‌ریسک بساز که دستور `learn` را به PATH کاربر اضافه کند.
-- [ ] `learn start`، `learn --help` و `learn --version` را پشتیبانی کن.
-- [ ] نبودن Python یا نسخه ناسازگار را با پیام راه‌حل‌دار گزارش کن.
-- [ ] دستور README را روی PowerShell تازه و بدون alias موقت آزمایش کن.
+- [x] یک installer یا setup کم‌ریسک بساز که دستور `learn` را به PATH کاربر اضافه کند.
+- [x] `learn start`، `learn --help` و `learn --version` را پشتیبانی کن.
+- [x] نبودن Python یا نسخه ناسازگار را با پیام راه‌حل‌دار گزارش کن.
+- [x] دستور README را روی PowerShell تازه و بدون alias موقت آزمایش کن.
 
 معیار پذیرش: کاربر تازه‌کار README را دنبال کند و در اولین تلاش به صفحه خوش‌آمد برسد.
 
 ### T002 — یکپارچه‌سازی جریان اجرای تمرین
 
-- [ ] orchestration را در یک نقطه مشخص قرار بده؛ PowerShell فقط launcher نازک باشد و منطق نشست/تمرین/امتیازدهی در Python اجرا شود.
-- [ ] پاسخ `task_runner` را مستقیماً به `ChallengeScorer` بده.
-- [ ] نتیجه scorer را به لایه ذخیره‌سازی منتقل کن؛ completion نباید hard-code شود.
-- [ ] exit code و پیام پایانی باید نتیجه واقعی جلسه را منعکس کنند.
+- [x] orchestration را در یک نقطه مشخص قرار بده؛ PowerShell فقط launcher نازک باشد و منطق نشست/تمرین/امتیازدهی در Python اجرا شود.
+- [x] پاسخ `task_runner` را مستقیماً به `ChallengeScorer` بده.
+- [x] نتیجه scorer را به لایه ذخیره‌سازی منتقل کن؛ completion نباید hard-code شود.
+- [x] exit code و پیام پایانی باید نتیجه واقعی جلسه را منعکس کنند.
 
 معیار پذیرش: پاسخ خالی، `banana` و پاسخ درست سه نتیجه قابل‌تمایز تولید کنند.
 
@@ -42,7 +42,7 @@
 - [x] fixture برای state directory موقت بساز تا تست‌ها به `.local/state` واقعی دست نزنند.
 - [x] تست واحد برای `ProgressStore`، `ChallengeScorer` و انتخاب مدل اضافه کن.
 - [x] تست end-to-end برای entry point واقعی CLI اضافه کن.
-- [x] اجرای `python -m pytest -q` از ریشه و پوشه والد exit code صفر می‌دهد (`24 passed`).
+- [x] اجرای `python -m pytest -q` از ریشه و پوشه والد exit code صفر می‌دهد (`29 passed`).
 
 معیار پذیرش: تست قرمز برای هر باگ فعلی نوشته شود، سپس با پیاده‌سازی سبز شود.
 

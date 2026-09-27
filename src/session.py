@@ -8,13 +8,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 SRC_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SRC_DIR.parent
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
 from llm.model_selector import ModelSelector
 from persist.progress_store import ProgressSaveError, ProgressStore
 from scoring.challenge_scorer import ChallengeScorer
+from task_runner import capture_answer, run_task
 
 DEFAULT_ACCEPTED = ("docker pull nginx", "podman pull nginx")
 LESSON_ID = "beginner-first-task"
@@ -80,14 +80,6 @@ def _show_intro(output):
     output("Phases: P0 -> P1 -> P2 -> P3 -> P4 -> P5")
 
 
-def _show_task(output):
-    task_path = PROJECT_ROOT / "content" / "tasks" / "beginner_first_task.md"
-    if task_path.exists():
-        output(task_path.read_text(encoding="utf-8"))
-    else:
-        output("First challenge: pull the nginx container image.")
-
-
 def run_cli(args, input_fn=input, output=print):
     session = Session(state_path=args.state_path)
     before = session.init()
@@ -116,31 +108,41 @@ def run_cli(args, input_fn=input, output=print):
         return 64
 
     output(f"Selected level: {level}")
-    _show_task(output)
+    if args.non_interactive and args.answer is None:
+        output("Missing --answer in non-interactive mode.")
+        return 64
 
-    pending_answer = args.answer
+    try:
+        answer = run_task(
+            input_fn=input_fn,
+            output=output,
+            supplied_answer=args.answer,
+        )
+    except EOFError:
+        output("Input ended before the challenge was answered.")
+        return 130
+
     while True:
-        if pending_answer is not None:
-            answer = pending_answer
-            pending_answer = None
-        elif args.non_interactive:
-            output("Missing --answer in non-interactive mode.")
-            return 64
-        else:
-            try:
-                answer = input_fn("Your answer: ")
-            except EOFError:
-                output("Input ended before the challenge was answered.")
-                return 130
-
+        # The answer returned by task_runner is scored in the production path.
         correct, _ = session.run_challenge(answer)
         if correct:
             output("Correct. Progress saved.")
             return 0
 
-        output("Incorrect. Hint: use the container runtime, then the pull command, then nginx.")
-        if args.non_interactive:
-            return 2
+        if not str(answer).strip():
+            output("No answer provided. Progress was not completed.")
+            if args.non_interactive:
+                return 64
+        else:
+            output("Incorrect. Hint: use the container runtime, then the pull command, then nginx.")
+            if args.non_interactive:
+                return 2
+
+        try:
+            answer = capture_answer(input_fn=input_fn, output=output)
+        except EOFError:
+            output("Input ended before the challenge was answered.")
+            return 130
 
 
 def build_parser():

@@ -1,11 +1,33 @@
 # CLI Learning Tool — AI Platform Engineering (US1 MVP)
 
-Entry: `learn.ps1` | Tasks: T013, T014, T015
+Entry: `learn` | Tasks: T001, T013, T014, T015
 
 ## Quick start
+
+Prerequisites: Windows PowerShell 5.1+ and Python 3.11+.
+
+From a fresh PowerShell opened in the project directory:
+
 ```powershell
-function learn { param([string]$c); .\learn.ps1 $c }
+.\install.ps1
+learn --help
+learn --version
 learn start
+```
+
+The installer is user-scoped, needs no Administrator access, and safely avoids duplicate PATH entries when rerun. The command is available immediately in the current PowerShell; reopen any older terminal windows to refresh their PATH.
+
+If PowerShell blocks the installer, allow it only for the current process and retry:
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+.\install.ps1
+```
+
+If Python is missing or older than 3.11, install a supported version and reopen PowerShell:
+
+```powershell
+winget install -e --id Python.Python.3.12
 ```
 
 ## Project structure
@@ -36,7 +58,7 @@ cli-learning-tool/
 - Interactive multi-lesson navigation remains planned work.
 
 ## Test / CI
-Requires Python >=3.11, PowerShell 5.1+.
+
 ```powershell
 pip install -r requirements-dev.txt
 python -m pytest -q
