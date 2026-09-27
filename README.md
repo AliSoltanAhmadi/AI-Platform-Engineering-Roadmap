@@ -1,49 +1,47 @@
-# AI Platform Engineering Roadmap
+# CLI Learning Tool — AI Platform Engineering (US1 MVP)
 
-> Free, practical path for **DevOps / Platform / SRE** engineers moving into **AI Platform Engineering** (MLOps + LLMOps).
+Entry: `learn.ps1` | Tasks: T013, T014, T015
 
-## About this repository
-
-This repo is a public, follow-along career upgrade plan: from classic DevOps/platform work to shipping **ML and LLM platforms**.
-
-**What we want to achieve**
-
-- Reuse Linux, Docker/Kubernetes, CI/CD, and observability skills for AI platforms
-- Cover both **MLOps** (pipelines, registries, drift) and **LLMOps** (vLLM, RAG, GPU scheduling, gateways)
-- Prefer **free** learning — especially [KodeKloud](https://kodekloud.com/) labs
-- Finish with **portfolio projects** and interview stories, not certificates alone
-
-**Pace**
-
-| Pace | Timeline |
-|------|----------|
-| ~3 hours/week | 18–24 months |
-| ~8–10 hours/week | ~9–12 months |
-
-## Start here
-
-**Full roadmap (phases, GPU scheduling, course links):**  
-→ **[RoadMap/ai_platform_roadmap.md](RoadMap/ai_platform_roadmap.md)**
-
-## Repo layout
-
-```text
-.
-├── README.md                          ← you are here (overview)
-├── RoadMap/
-│   └── ai_platform_roadmap.md         ← full learning path
-└── notes/                             ← your study session notes
+## Quick start
+```powershell
+function learn { param([string]$c); .\learn.ps1 $c }
+learn start
 ```
 
-## How to follow
+## Project structure
+```
+cli-learning-tool/
+├── learn.ps1                      # entry point
+├── README.md                       # this file
+├── src/
+│   ├── session_init.py             # T013
+│   ├── task_runner.py              # T015
+│   ├── main.ps1                    # dispatcher
+│   ├── persist/progress_store.py
+│   ├── llm/ollama_client.py
+│   ├── llm/bundled_model.py
+│   └── scoring/challenge_scorer.py
+├── content/tasks/beginner_first_task.md  # T014
+├── contracts/
+├── tests/
+└── .local/state/progress.json      # runtime
+```
 
-1. Open [RoadMap/ai_platform_roadmap.md](RoadMap/ai_platform_roadmap.md)
-2. Work phases in order (skip Phase 0 topics you already know)
-3. Log sessions under `notes/` (e.g. `YYYY-MM-DD-topic.md`)
-4. Publish Phase 5 projects as separate repos and link them from your profile
+## Completed
+- T013 session initialization, T014 beginner content, T015 interactive runner
+- Non-interactive production path validated for wrong answer, correct answer, persistence, and idempotent resume
 
-## Maintainer
+## Not completed yet
+- The full Quickstart Scenario 1 roadmap-explainer conversation is not yet implemented or validated.
+- Interactive multi-lesson navigation remains planned work.
 
-[Ali SoltanAhmadi](https://github.com/AliSoltanAhmadi)
-
-Contributions welcome — open a PR with a short “why.”
+## Test / CI
+Requires Python >=3.11, PowerShell 5.1+.
+```powershell
+pip install -r requirements-dev.txt
+python -m pytest -q
+# From the parent directory:
+python -m pytest -q .\AI_Platform_Engineering\tests
+```
+## Versions
+Python 3.12, PowerShell 7 / 5.1 supported.

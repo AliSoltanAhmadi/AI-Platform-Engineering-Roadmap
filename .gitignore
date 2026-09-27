@@ -1,68 +1,39 @@
-# ============================================================
-# AI Platform Engineering Roadmap — .gitignore
-# Root-level ignore rules for this documentation repo.
-# ============================================================
-
-
-# --- Global / universal ignores -------------------------------------------
-
-# Editor & OS files
-.DS_Store
-Thumbs.db
-*.swp
-*~
-.idea/
-.vscode/
-settings.xml
-
-# Local environment
-.env
-.env.*
-.env.local
-venv/
-env/
+# Python cache and build artifacts
 __pycache__/
 .pytest_cache/
+.coverage
+htmlcov/
+.pytest_cache/
 .mypy_cache/
-
-# Build artifacts
 build/
 dist/
-out/
-target/
 
+# Local state files
+.local/state/*
+!.local/state/.gitkeep
 
-# --- Cline (AI coding agent) state -----------------------------------------
-
-.git/
-*.log
-cline-logs.jsonl
-references.md
-refs/cline/            # Cline's local branch/metadata refs
-*.checkpoint
-.cline_state
-.clinerules
-
-# --- Specify / Speckit project artifacts ------------------------------------
-# .specify/ holds BOTH shared templates AND machine-local state.
-# Only the private parts below are ignored; workflows/templates/manifolds
-# in this directory ARE tracked, so do not ignore the whole folder.
-
-.specify
-specs
-# Per-feature tool runtime state (plain JSON, single-user, local-only).
-specs/**/.local/state/progress.json
-
-# Shared Specify assets below ARE tracked — keep them out of the ignore.
-!.specify/templates/
-!.specify/workflows/
-!.specify/integrations/*.manifest.json
-
-
-# --- Markdown / notes helpers ----------------------------------------------
-
-*.tmp.md
-notes/.cache/
-
+# IDE and editor files
+.idea/
+.vscode/settings.json
+*.swp
 *~
-__pycache__/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment files
+.env*
+
+graphify-out
+ISSUE*
+specs
+.claude
+.clinerules
+.opencode
+CLAUDE.md
+AGENTS.md
+.specify
