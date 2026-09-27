@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0.0",
+  "pass_percentage": 80,
+  "questions": [
+    {
+      "id": "probe-p0-image-pull",
+      "topic_id": "p0-bridge-docker-compose-fastapi",
+      "prompt": "Which command downloads a public nginx image without starting it?",
+      "options": ["A. docker pull nginx", "B. docker exec nginx"],
+      "accepted_answer": "A"
+    },
+    {
+      "id": "probe-p0-k8s-service",
+      "topic_id": "p0-bridge-pod-deployment-service",
+      "prompt": "Which Kubernetes object gives a group of Pods a stable network endpoint?",
+      "options": ["A. ConfigMap", "B. Service"],
+      "accepted_answer": "B"
+    },
+    {
+      "id": "probe-p1-python-data",
+      "topic_id": "p1-ml-literacy-python",
+      "prompt": "Which library call is intended to load tabular CSV data for inspection?",
+      "options": ["A. pandas.read_csv", "B. kubectl apply"],
+      "accepted_answer": "A"
+    },
+    {
+      "id": "probe-p2-dvc",
+      "topic_id": "p2-mlops-dvc",
+      "prompt": "Which tool versions datasets alongside code for reproducible ML work?",
+      "options": ["A. Grafana", "B. DVC"],
+      "accepted_answer": "B"
+    },
+    {
+      "id": "probe-p2-mlflow",
+      "topic_id": "p2-mlops-mlflow",
+      "prompt": "Which tool records experiment parameters, metrics, and model artifacts?",
+      "options": ["A. MLflow", "B. CoreDNS"],
+      "accepted_answer": "A"
+    },
+    {
+      "id": "probe-p2-feast",
+      "topic_id": "p2-mlops-feast",
+      "prompt": "Which component keeps training and serving features consistent?",
+      "options": ["A. Container shell", "B. Feature store"],
+      "accepted_answer": "B"
+    },
+    {
+      "id": "probe-p3-argo",
+      "topic_id": "p3-k8s-argoworkflows",
+      "prompt": "Which system represents multi-step training work as Kubernetes workflows?",
+      "options": ["A. Argo Workflows", "B. Docker Hub"],
+      "accepted_answer": "A"
+    },
+    {
+      "id": "probe-p4-vllm",
+      "topic_id": "p4-llmops-vllm",
+      "prompt": "Which server uses techniques such as continuous batching for LLM inference?",
+      "options": ["A. DVC", "B. vLLM"],
+      "accepted_answer": "B"
+    },
+    {
+      "id": "probe-p4-rag",
+      "topic_id": "p4-llmops-rag",
+      "prompt": "Which pattern retrieves relevant documents before generating an answer?",
+      "options": ["A. RAG", "B. Rolling deployment"],
+      "accepted_answer": "A"
+    },
+    {
+      "id": "probe-p5-portfolio",
+      "topic_id": "p5-portfolio-mlops-mini-platform",
+      "prompt": "What best demonstrates end-to-end AI platform ability to an employer?",
+      "options": ["A. An undocumented command list", "B. A documented working mini-platform"],
+      "accepted_answer": "B"
+    }
+  ]
+}

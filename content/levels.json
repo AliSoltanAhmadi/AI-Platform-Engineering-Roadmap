@@ -1,0 +1,37 @@
+{
+  "feature": "Level-appropriate learning paths",
+  "schema_version": "1.0.0",
+  "levels": {
+    "beginner": {
+      "prerequisites": ["Basic terminal usage", "Docker basics"],
+      "start_challenge_id": "challenge-pull-image",
+      "challenge_ids": ["challenge-pull-image", "challenge-pod-command"],
+      "lesson": "beginner_first_task.md",
+      "exercise": "beginner_exercise.md",
+      "quiz": "beginner_quiz.json"
+    },
+    "intermediate": {
+      "prerequisites": ["Python basics", "Container fundamentals"],
+      "start_challenge_id": "challenge-pandas-load",
+      "challenge_ids": ["challenge-pandas-load", "challenge-dvc-add", "challenge-argo-workflow"],
+      "lesson": "intermediate_first_task.md",
+      "exercise": "intermediate_exercise.md",
+      "quiz": "intermediate_quiz.json"
+    },
+    "experienced": {
+      "prerequisites": ["Kubernetes scheduling", "GPU drivers", "Container registries"],
+      "start_challenge_id": "challenge-vllm-launch",
+      "challenge_ids": ["challenge-vllm-launch"],
+      "lesson": "experienced_first_task.md",
+      "exercise": "experienced_exercise.md",
+      "quiz": "experienced_quiz.json"
+    }
+  },
+  "glossary": {
+    "MLOps": "Practices for deploying, monitoring, versioning, and maintaining machine-learning systems.",
+    "LLMOps": "MLOps practices specialized for large language models, including serving and prompt or model versioning.",
+    "registry": "A versioned store used to distribute container images or model artifacts.",
+    "inference": "Running a trained model to produce a prediction or generated output.",
+    "GPU scheduling": "Assigning limited GPU resources to workloads so training and inference can run reliably."
+  }
+}

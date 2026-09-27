@@ -1,6 +1,9 @@
 {
   "feature": "Interactive CLI AI Platform Engineering Learning Tool",
   "schema_version": "1.0.0",
+  "phase_prerequisites": {
+    "DevOps fundamentals": ["Basic terminal usage"]
+  },
   "topics": [
     {
       "topic_id": "devops-fundamentals-1",

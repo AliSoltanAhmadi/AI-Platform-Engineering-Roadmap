@@ -49,6 +49,7 @@ def test_cli_smoke_powerline_entry_point_fails_on_hang(tmp_path):
     assert result.returncode == 0, result.stderr
     assert "AI Platform Engineering Learning Tool" in result.stdout
     assert "Active local model:" in result.stdout
+    assert "Inference scope:" in result.stdout
     assert "Correct. Progress saved." in result.stdout
     data = json.loads(state_path.read_text(encoding="utf-8"))
     assert data["completed_lessons"] == ["beginner-first-task"]

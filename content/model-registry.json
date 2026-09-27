@@ -11,6 +11,11 @@
       "backend": "vLLM",
       "capability_level": "experienced",
       "default_model": "meta-llama/Llama-3.1-8B"
+    },
+    {
+      "backend": "Deterministic Knowledge Base",
+      "capability_level": "beginner",
+      "default_model": "knowledge-base-v1"
     }
   ]
 }

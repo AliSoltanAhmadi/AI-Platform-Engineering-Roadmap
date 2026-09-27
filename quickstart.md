@@ -21,6 +21,13 @@ Proves User Story 1 + User Story 3, and satisfies SC-001/SC-004 (first run in �
 6. Encounter a command-entry challenge; answer with `docker pull nginx` — accept both `docker pull` and `podman pull` per `contracts/challenge-definition.json`. Expect immediate confirm/hint feedback.
 7. Exit, relaunch, type `learn start`, expect prior progress restored from `.local/state/progress.json` (schema_version 1.0.0) with a continue option.
 
+## Interface language and terminal encoding
+
+- English is the default product language: `learn start -Lang en` in PowerShell or `python src/session.py start --lang en`.
+- Persian navigation and the localized beginner first task are available with `learn start -Lang fa` or `--lang fa`.
+- `learn.ps1` enables UTF-8 Python output and UTF-8 console encoding so Persian text and symbols such as `✓` render consistently in Windows PowerShell and modern terminals.
+- Recoverable failures always state what happened, why it happened, and the next action.
+
 ## Scenario 2 — Out-of-scope & error handling
 
 Proves User Story 2 acceptance scenarios and Edge Cases in spec.

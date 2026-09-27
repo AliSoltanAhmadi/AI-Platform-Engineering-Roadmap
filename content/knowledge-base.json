@@ -1,6 +1,14 @@
 {
   "feature": "Interactive CLI AI Platform Engineering Learning Tool",
   "schema_version": "1.0.0",
+  "phase_prerequisites": {
+    "P0 Bridge": ["Basic terminal usage", "Container fundamentals"],
+    "P1 ML literacy": ["P0 platform foundations", "Basic Python"],
+    "P2 Core MLOps": ["Python and ML vocabulary", "Git and container basics"],
+    "P3 K8s-as-ML-platform": ["Kubernetes primitives", "Core MLOps workflow"],
+    "P4 LLMOps/GPU scheduling": ["Kubernetes scheduling", "Model serving fundamentals"],
+    "P5 Portfolio & career packaging": ["Completed hands-on P2-P4 projects"]
+  },
   "topics": [
     {
       "topic_id": "p0-bridge-docker-compose-fastapi",

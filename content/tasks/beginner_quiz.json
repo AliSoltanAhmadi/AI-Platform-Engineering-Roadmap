@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "quiz_id": "beginner-check",
+  "title": "Beginner Check",
+  "questions": [
+    {
+      "id": "registry-purpose",
+      "type": "multiple_choice",
+      "prompt": "What does a registry store and distribute?",
+      "options": ["A. Running processes", "B. Versioned images or artifacts", "C. Terminal history"],
+      "accepted_answers": ["B", "B. Versioned images or artifacts"],
+      "hint": "Think about where versioned container images are pulled from."
+    },
+    {
+      "id": "pull-image",
+      "type": "command",
+      "prompt": "Enter a command that downloads the nginx image without starting it.",
+      "accepted_answers": ["docker pull nginx", "podman pull nginx"],
+      "hint": "Use a container runtime followed by its image-download operation."
+    },
+    {
+      "id": "pull-versus-run",
+      "type": "free_response",
+      "prompt": "Briefly explain how pulling an image differs from running a container.",
+      "accepted_keywords": ["download", "start"],
+      "min_keywords": 2,
+      "hint": "Mention what pull obtains and what run starts."
+    }
+  ]
+}

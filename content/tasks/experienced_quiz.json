@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "quiz_id": "experienced-check",
+  "title": "Experienced Check",
+  "questions": [
+    {
+      "id": "gpu-scheduling",
+      "type": "multiple_choice",
+      "prompt": "What is the primary purpose of GPU scheduling?",
+      "options": ["A. Version prompts", "B. Assign accelerator capacity", "C. Store images"],
+      "accepted_answers": ["B", "B. Assign accelerator capacity"],
+      "hint": "Think about sharing limited accelerator resources."
+    },
+    {
+      "id": "launch-vllm",
+      "type": "command",
+      "prompt": "Launch the vLLM OpenAI-compatible server for model-name.",
+      "accepted_answers": ["python -m vllm.entrypoints.openai.api_server --model model-name"],
+      "hint": "Run the vLLM API server module with an explicit model argument."
+    },
+    {
+      "id": "inference-monitoring",
+      "type": "free_response",
+      "prompt": "Name two useful signals when monitoring an inference server.",
+      "accepted_keywords": ["latency", "errors", "throughput", "gpu"],
+      "min_keywords": 2,
+      "hint": "Consider response speed, failures, traffic, or accelerator use."
+    }
+  ]
+}

@@ -41,6 +41,9 @@ def test_main_menu_exposes_all_actions_and_exit(tmp_path):
     assert "3. Select path" in output
     assert "4. Review previous stage" in output
     assert "5. Exit" in output
+    assert "6. Ask a roadmap question" in output
+    assert "7. Reset all progress" in output
+    assert "8. Take pre/post learning assessment" in output
     assert "Goodbye. Your progress is saved." in output
 
 
@@ -54,7 +57,7 @@ def test_show_progress_and_review_previous_stage(tmp_path):
     exit_code, output = _run_menu(state_path, ["2", "4", "5"])
 
     assert exit_code == 0
-    assert "Lessons completed: 1/6" in output
+    assert "Lessons completed: 1/2" in output
     assert "Current lesson: run-first-container" in output
     assert "Previous stage: beginner-first-task" in output
     assert "Why it worked:" in output
@@ -96,7 +99,7 @@ def test_next_stage_stays_locked_until_prerequisite_is_complete(tmp_path):
     assert exit_code == 0
     assert "Continuing from: run-first-container" in output
     assert resumed["completed_lessons"] == ["beginner-first-task", "run-first-container"]
-    assert resumed["current_lesson"] == "load-first-dataset"
+    assert resumed["current_lesson"] is None
 
 
 def test_relaunch_continues_last_stage_with_one_menu_selection(tmp_path):

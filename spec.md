@@ -100,6 +100,9 @@ Independent Test: A learner completes part of a path in one launch, exits, launc
 - FR-006: The tool MUST persist learner progress (selected level, completed lessons, quiz results) locally so sessions can resume across separate launches. Progress is stored as plain local JSON under a local data directory with no encryption and no authentication gate; answers are human-readable for maintainers.
 - FR-007: The tool MUST allow the learner to return to any section of their path at any time from a central menu or overview screen.
 - FR-008: When asked about content outside this learning path, the tool MUST respond politely and offer to return to the main menu instead of erroring out.
+- FR-009: Every interactive entry screen MUST state one clear next action; every recoverable error MUST explain what happened, why it happened, and what the learner should do next.
+- FR-010: English MUST remain the default interface language, while `--lang fa` provides Persian navigation and beginner content. Both languages MUST preserve Unicode text in supported Windows PowerShell and terminal launches.
+- FR-011: CI MUST reject invalid content schemas, failing tests, CLI smoke failures, scoring coverage below 90%, persistence coverage below 85%, and failures on either Windows PowerShell 5.1 or PowerShell 7. Release artifacts MUST depend on all quality and end-to-end gates succeeding.
 
 ## Assumptions
 
@@ -120,20 +123,20 @@ Independent Test: A learner completes part of a path in one launch, exits, launc
 - SC-001: A new learner can complete onboarding and their first interactive step within three minutes of starting the tool for the very first time, with no configuration.
 - SC-002: Learners correctly identify at least 80% of roadmap topics they query after completing a basic path, versus below 50% before using the tool (measured on a short pre/post check).
 
-**SC-002 measurement instrument (pre/post probe set).** Validation uses a fixed, human-grade probe set of ten representative roadmap topics drawn across all roadmap phases (bridge through portfolio), each with one correct answer and one plausible distractor. Scoring is percentage-correct on the same probe taken before and after a basic path:
+**SC-002 measurement instrument (pre/post probe set).** Validation uses one fixed set of ten two-option questions. Every question has a unique topic id, one correct answer, and one plausible distractor. The same set is used before and after a path so the scores are directly comparable:
 
-- Probe question 1: "What command pulls a public image into your local container runtime?" — Correct: `docker pull <image>` or equivalent tooling (podman/ctr). Distractor: an interactive shell-only action.
-- Probe question 2: "Which capability lets you scale pods across nodes and schedule them by resource needs?" — Correct: Kubernetes orchestration concepts (deployments/scheduler/CPU/memory limits). Distractor: a single-machine manual process.
-- Probe question 3: "Name the artifact used to define declarative application configuration for deployment." — Correct: YAML manifests. Distractor: a scripted imperative sequence.
-- Probe question 4: "What tool pulls a container image from a registry?" — Correct: `docker pull`. Distractor: an in-browser action.
-- Probe question 5: "Which component manages declarative application configuration for deployment?" — Correct: Kubernetes (deployments/scheduler). Distractor: a scripted imperative sequence.
-- Probe question 6: "What tool pulls a container image from a registry?" — Correct: `docker pull`. Distractor: an in-browser action.
-- Probe question 7: "Which capability lets you scale pods across nodes and schedule them by resource needs?" — Correct: Kubernetes orchestration concepts (deployments/scheduler/CPU/memory limits). Distractor: a single-machine manual process.
-- Probe question 8: "Name the artifact used to define declarative application configuration for deployment." — Correct: YAML manifests. Distractor: a scripted imperative sequence.
-- Probe question 9: "What command pulls a public image into your local container runtime?" — Correct: `docker pull <image>` or equivalent tooling (podman/ctr). Distractor: an interactive shell-only action.
-- Probe question 10: "Which capability lets you scale pods across nodes and schedule them by resource needs?" — Correct: Kubernetes orchestration concepts (deployments/scheduler/CPU/memory limits). Distractor: a single-machine manual process.
+1. Pulling a public container image without starting it (`docker pull`).
+2. Giving a set of Kubernetes Pods a stable network endpoint (Service).
+3. Loading tabular CSV data for inspection (`pandas.read_csv`).
+4. Versioning datasets alongside code for reproducible ML work (DVC).
+5. Recording experiment parameters, metrics, and artifacts (MLflow).
+6. Keeping training and serving features consistent (feature store).
+7. Representing multi-step training as Kubernetes workflows (Argo Workflows).
+8. Serving LLM inference with continuous batching (vLLM).
+9. Retrieving relevant documents before answer generation (RAG).
+10. Demonstrating end-to-end ability with a documented working mini-platform.
 
-**Pass thresholds:** Pre-path baseline must score below 50% correct (i.e., fewer than five of ten). Post-path result must be at least 80% correct (eight or more of ten), measured on the identical probe set so scores are directly comparable.
+**Pass thresholds:** The pre-path score is recorded as a non-blocking baseline; the SC-002 validation cohort target remains below 50%. A learner completes the path only after scoring at least 80% (eight or more of ten) on the post-test.
 
 ### SC-002 Note
 The pre/post check is a short, repeatable quiz over the probe set above — not a production workload. It validates learner comprehension of roadmap topics rather than system performance.

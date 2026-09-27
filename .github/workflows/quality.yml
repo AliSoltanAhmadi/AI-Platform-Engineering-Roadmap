@@ -1,0 +1,110 @@
+name: Quality gates
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Tests, schemas, coverage, and CLI smoke
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install test tools
+        run: python -m pip install -r requirements-dev.txt
+      - name: Validate content and contract schemas
+        run: python scripts/validate_schemas.py
+      - name: Run the complete test suite
+        run: python -m pytest -q
+      - name: Enforce scoring coverage (minimum 90%)
+        run: >-
+          python -m pytest tests/unit/test_challenge_scorer.py
+          tests/unit/test_t004_scoring.py tests/unit/test_t005_learning_loop.py -q
+          --cov=src/scoring --cov-report=term-missing --cov-fail-under=90
+      - name: Enforce persistence coverage (minimum 85%)
+        run: >-
+          python -m pytest tests/unit/test_persist.py
+          tests/unit/test_t006_progress_model.py -q
+          --cov=src/persist --cov-report=term-missing --cov-fail-under=85
+      - name: Smoke-test the installed entry path
+        shell: powershell
+        run: |
+          $statePath = Join-Path $env:RUNNER_TEMP "quality-smoke-progress.json"
+          & .\learn.ps1 start -Level 1 -Answer "docker pull nginx" -StatePath $statePath -NonInteractive
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+  windows-shells:
+    name: ${{ matrix.name }} compatibility
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows PowerShell 5.1
+            shell: powershell
+            edition: Desktop
+          - name: PowerShell 7
+            shell: pwsh
+            edition: Core
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run English and Persian CLI smoke tests
+        shell: ${{ matrix.shell }}
+        run: |
+          if ($PSVersionTable.PSEdition -ne "${{ matrix.edition }}") {
+            throw "Expected ${{ matrix.edition }}, got $($PSVersionTable.PSEdition)"
+          }
+          $englishState = Join-Path $env:RUNNER_TEMP "${{ matrix.edition }}-en.json"
+          $farsiState = Join-Path $env:RUNNER_TEMP "${{ matrix.edition }}-fa.json"
+          & .\learn.ps1 start -Level 1 -Answer "docker pull nginx" -StatePath $englishState -Lang en -NonInteractive
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & .\learn.ps1 start -Level 1 -Answer "docker pull nginx" -StatePath $farsiState -Lang fa -NonInteractive
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+  end-to-end:
+    name: Required end-to-end tests
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements-dev.txt
+      - run: >-
+          python -m pytest -q tests/unit/test_e2e_session_persistence.py
+          tests/unit/test_cli_smoke.py tests/unit/test_t015_beginner_ux.py
+
+  release-package:
+    name: Build release package only after green gates
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [quality, windows-shells, end-to-end]
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Assemble tested source archive
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Path dist -Force | Out-Null
+          $archive = "dist/ai-platform-learning-${{ github.ref_name }}.zip"
+          Compress-Archive -Path learn.ps1, install.ps1, uninstall.ps1, src, content, contracts, quickstart.md, README.md -DestinationPath $archive
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ai-platform-learning-${{ github.ref_name }}
+          path: dist/*
+          if-no-files-found: error

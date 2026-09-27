@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "quiz_id": "intermediate-check",
+  "title": "Intermediate Check",
+  "questions": [
+    {
+      "id": "data-versioning",
+      "type": "multiple_choice",
+      "prompt": "Why version a dataset with model code?",
+      "options": ["A. To reproduce a model run", "B. To allocate a GPU", "C. To expose an API"],
+      "accepted_answers": ["A", "A. To reproduce a model run"],
+      "hint": "Think about recreating the same training inputs later."
+    },
+    {
+      "id": "track-data",
+      "type": "command",
+      "prompt": "Enter the DVC command that tracks data.csv.",
+      "accepted_answers": ["dvc add data.csv"],
+      "hint": "Use DVC's add operation with the requested file."
+    },
+    {
+      "id": "inference-meaning",
+      "type": "free_response",
+      "prompt": "What happens during model inference?",
+      "accepted_keywords": ["model", "output"],
+      "min_keywords": 2,
+      "hint": "Mention the trained model and what it produces."
+    }
+  ]
+}
