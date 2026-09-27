@@ -42,17 +42,17 @@
 - [x] fixture برای state directory موقت بساز تا تست‌ها به `.local/state` واقعی دست نزنند.
 - [x] تست واحد برای `ProgressStore`، `ChallengeScorer` و انتخاب مدل اضافه کن.
 - [x] تست end-to-end برای entry point واقعی CLI اضافه کن.
-- [x] اجرای `python -m pytest -q` از ریشه و پوشه والد exit code صفر می‌دهد (`29 passed`).
+- [x] اجرای `python -m pytest -q` از ریشه و پوشه والد exit code صفر می‌دهد (`43 passed`).
 
 معیار پذیرش: تست قرمز برای هر باگ فعلی نوشته شود، سپس با پیاده‌سازی سبز شود.
 
 ### T004 — امتیازدهی امن و قابل‌اعتماد
 
-- [ ] challenge را با `challenge_id`، پاسخ‌های مجاز، hint و قواعد normalization از `content/challenges.json` بارگذاری کن.
-- [ ] command را token-based یا parser-based مقایسه کن؛ substring ساده کافی نیست.
-- [ ] `docker pull nginx` و `podman pull nginx` را درست بپذیر.
-- [ ] پاسخ خالی، `banana` و جمله‌ای که فقط حاوی عبارت مجاز است را رد کن.
-- [ ] دلیل قبولی یا رد را بدون افشای ناخواسته پاسخ کامل برگردان.
+- [x] challenge را با `challenge_id`، پاسخ‌های مجاز، hint و قواعد normalization از `content/challenges.json` بارگذاری کن.
+- [x] command را token-based یا parser-based مقایسه کن؛ substring ساده کافی نیست.
+- [x] `docker pull nginx` و `podman pull nginx` را درست بپذیر.
+- [x] پاسخ خالی، `banana` و جمله‌ای که فقط حاوی عبارت مجاز است را رد کن.
+- [x] دلیل قبولی یا رد را بدون افشای ناخواسته پاسخ کامل برگردان.
 
 معیار پذیرش: جدول تست پاسخ‌های مجاز، غلط، ناقص، دارای فاصله اضافی و حروف متفاوت سبز باشد.
 

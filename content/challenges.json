@@ -1,54 +1,66 @@
 {
   "feature": "Interactive CLI AI Platform Engineering Learning Tool",
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
+  "normalization_defaults": {
+    "case_sensitive": false,
+    "trim": true,
+    "collapse_whitespace": true,
+    "parser": "shell_tokens"
+  },
   "challenges": [
     {
-      "id": "challenge-pull-image",
+      "challenge_id": "challenge-pull-image",
+      "lesson_id": "beginner-first-task",
       "topic_id": "p0-bridge-docker-compose-fastapi",
-      "prompt": "Enter the command to pull a public image from a registry:",
-      "acceptance_patterns": ["^docker pull", "^podman pull"],
-      "feedback_correct": "Correct — you pulled the image into your local container runtime.",
-      "feedback_hint": "Hint: use `docker pull <image>` (or `podman pull`). Arguments and tool name are optional; just include a verb like pull."
+      "prompt": "Enter the command to pull the nginx image from a registry:",
+      "accepted_answers": ["docker pull nginx", "podman pull nginx"],
+      "hint": "Use a container runtime, its image-download subcommand, and the requested image name in that order.",
+      "feedback_correct": "Correct. You pulled the image into your local container runtime."
     },
     {
-      "id": "challenge-pod-command",
+      "challenge_id": "challenge-pod-command",
+      "lesson_id": "run-first-container",
       "topic_id": "p0-bridge-pod-deployment-service",
-      "prompt": "Enter the command to run a container from an image:",
-      "acceptance_patterns": ["^docker run"],
-      "feedback_correct": "Correct — you started a new Pod by running the container.",
-      "feedback_hint": "Hint: use `docker run <image>`. Arguments are optional; just include the word run."
+      "prompt": "Enter the command to run the nginx image:",
+      "accepted_answers": ["docker run nginx", "podman run nginx"],
+      "hint": "Use a container runtime, its run subcommand, and the requested image name.",
+      "feedback_correct": "Correct. You started the container."
     },
     {
-      "id": "challenge-pandas-load",
+      "challenge_id": "challenge-pandas-load",
+      "lesson_id": "load-first-dataset",
       "topic_id": "p1-ml-literacy-python",
-      "prompt": "Enter the Python command to load a CSV file into memory:",
-      "acceptance_patterns": ["^df = pd.read_csv", "^import pandas as pd"],
-      "feedback_correct": "Correct — you loaded your dataset with pandas.",
-      "feedback_hint": "Hint: use `pd.read_csv('file.csv')`, assigning it to a variable named df."
+      "prompt": "Enter the Python statement to load file.csv into df:",
+      "accepted_answers": ["df = pd.read_csv('file.csv')", "df = pd.read_csv(\"file.csv\")"],
+      "hint": "Call the pandas CSV reader and assign its result to the requested variable.",
+      "feedback_correct": "Correct. You loaded the dataset with pandas."
     },
     {
-      "id": "challenge-dvc-add",
+      "challenge_id": "challenge-dvc-add",
+      "lesson_id": "track-first-dataset",
       "topic_id": "p2-mlops-dvc",
-      "prompt": "Enter the DVC command to add a dataset for version control:",
-      "acceptance_patterns": ["^dvc add"],
-      "feedback_correct": "Correct — you tracked your data with DVC.",
-      "feedback_hint": "Hint: run `dvc add data.csv` (or your file name)."
+      "prompt": "Enter the DVC command to track data.csv:",
+      "accepted_answers": ["dvc add data.csv"],
+      "hint": "Use DVC's command for adding the requested data file.",
+      "feedback_correct": "Correct. You tracked the dataset with DVC."
     },
     {
-      "id": "challenge-argo-workflow",
+      "challenge_id": "challenge-argo-workflow",
+      "lesson_id": "apply-first-workflow",
       "topic_id": "p3-k8s-argoworkflows",
-      "prompt": "Enter the kubectl command to apply an Argo Workflow manifest:",
-      "acceptance_patterns": ["^kubectl apply -f"],
-      "feedback_correct": "Correct — you deployed your training Job via Argo.",
-      "feedback_hint": "Hint: run `kubectl apply -f workflow.yaml`."
+      "prompt": "Enter the kubectl command to apply workflow.yaml:",
+      "accepted_answers": ["kubectl apply -f workflow.yaml"],
+      "hint": "Use kubectl's manifest application operation and provide the requested file.",
+      "feedback_correct": "Correct. You applied the workflow manifest."
     },
     {
-      "id": "challenge-vllm-launch",
+      "challenge_id": "challenge-vllm-launch",
+      "lesson_id": "launch-first-vllm-server",
       "topic_id": "p4-llmops-vllm",
-      "prompt": "Enter the command to start a vLLM server on a model:",
-      "acceptance_patterns": ["^python -m vllm.entrypoints.openai.api_server"],
-      "feedback_correct": "Correct — you launched your vLLM inference server.",
-      "feedback_hint": "Hint: run `python -m vllm.entrypoints.openai.api_server --model <name>`."
+      "prompt": "Enter the command to start the vLLM OpenAI-compatible server for model-name:",
+      "accepted_answers": ["python -m vllm.entrypoints.openai.api_server --model model-name"],
+      "hint": "Run the vLLM OpenAI server module and supply the requested model argument.",
+      "feedback_correct": "Correct. You launched the vLLM inference server."
     }
   ]
 }

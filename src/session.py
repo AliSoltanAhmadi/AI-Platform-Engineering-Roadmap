@@ -13,18 +13,18 @@ if str(SRC_DIR) not in sys.path:
 
 from llm.model_selector import ModelSelector
 from persist.progress_store import ProgressSaveError, ProgressStore
-from scoring.challenge_scorer import ChallengeScorer
+from scoring.challenge_loader import ChallengeLoader, ChallengeResponder
 from task_runner import capture_answer, run_task
 
-DEFAULT_ACCEPTED = ("docker pull nginx", "podman pull nginx")
-LESSON_ID = "beginner-first-task"
+DEFAULT_CHALLENGE_ID = "challenge-pull-image"
 
 
 class Session:
-    def __init__(self, state_path=None):
+    def __init__(self, state_path=None, challenge_path=None):
         self.path = Path(state_path) if state_path else Path(".local/state/progress.json")
         self.store = ProgressStore(path=str(self.path))
-        self.scorer = ChallengeScorer()
+        self.challenge_responder = ChallengeResponder(ChallengeLoader(challenge_path))
+        self.scorer = self.challenge_responder.scorer
         self.model_selector = ModelSelector()
 
     def init(self):
@@ -55,18 +55,23 @@ class Session:
     def select_model(self):
         return self.model_selector.select()
 
-    def run_challenge(self, answer, accepted=None):
-        accepted_answers = accepted or DEFAULT_ACCEPTED
-        correct = self.scorer.score(answer, accepted_answers)
+    def evaluate_challenge(self, answer, challenge_id=DEFAULT_CHALLENGE_ID):
+        outcome = self.challenge_responder.evaluate(challenge_id, answer)
+        challenge = self.challenge_responder.loader.get(challenge_id)
         data = self.store.load()
         data["attempts"] = data.get("attempts", 0) + 1
-        if correct:
+        if outcome.accepted and challenge is not None:
             completed = data.setdefault("completed", [])
-            if LESSON_ID not in completed:
-                completed.append(LESSON_ID)
+            if challenge.lesson_id not in completed:
+                completed.append(challenge.lesson_id)
             data["last_session"] = datetime.now(timezone.utc).isoformat()
         self.store.save(data)
-        return correct, data
+        return outcome, data
+
+    def run_challenge(self, answer):
+        """Compatibility wrapper for callers that only consume pass/fail."""
+        outcome, data = self.evaluate_challenge(answer)
+        return outcome.accepted, data
 
     def resume(self):
         return self.store.load()
@@ -124,17 +129,19 @@ def run_cli(args, input_fn=input, output=print):
 
     while True:
         # The answer returned by task_runner is scored in the production path.
-        correct, _ = session.run_challenge(answer)
-        if correct:
+        outcome, _ = session.evaluate_challenge(answer)
+        if outcome.accepted:
             output("Correct. Progress saved.")
             return 0
 
-        if not str(answer).strip():
+        if outcome.reason_code == "empty_answer":
             output("No answer provided. Progress was not completed.")
             if args.non_interactive:
                 return 64
         else:
-            output("Incorrect. Hint: use the container runtime, then the pull command, then nginx.")
+            output(f"Incorrect. {outcome.reason}")
+            if outcome.hint:
+                output(f"Hint: {outcome.hint}")
             if args.non_interactive:
                 return 2
 
