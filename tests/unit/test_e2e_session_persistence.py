@@ -26,13 +26,13 @@ def test_session_wrong_then_correct_then_resume(tmp_path):
     assert wrong.returncode == 2, wrong.stderr
     assert "Incorrect." in wrong.stdout
     data = json.loads(state_path.read_text(encoding="utf-8"))
-    assert data["completed"] == []
+    assert data["completed_lessons"] == []
 
     correct = _run_learn(repo_root, tmp_path, state_path, "docker pull nginx")
     assert correct.returncode == 0, correct.stderr
     assert "Correct. Progress saved." in correct.stdout
     data = json.loads(state_path.read_text(encoding="utf-8"))
-    assert data["completed"] == ["beginner-first-task"]
+    assert data["completed_lessons"] == ["beginner-first-task"]
 
 
 def test_cli_empty_answer_does_not_complete(tmp_path):
@@ -43,10 +43,10 @@ def test_cli_empty_answer_does_not_complete(tmp_path):
     assert result.returncode == 64, result.stderr
     assert "No answer provided." in result.stdout
     data = json.loads(state_path.read_text(encoding="utf-8"))
-    assert data["completed"] == []
+    assert data["completed_lessons"] == []
 
     resumed = _run_learn(repo_root, tmp_path, state_path, "docker pull nginx")
     assert resumed.returncode == 0, resumed.stderr
     assert "Resuming previous session" in resumed.stdout
     data = json.loads(state_path.read_text(encoding="utf-8"))
-    assert data["completed"] == ["beginner-first-task"]
+    assert data["completed_lessons"] == ["beginner-first-task"]

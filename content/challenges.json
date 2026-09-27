@@ -11,6 +11,7 @@
     {
       "challenge_id": "challenge-pull-image",
       "lesson_id": "beginner-first-task",
+      "prerequisites": [],
       "topic_id": "p0-bridge-docker-compose-fastapi",
       "prompt": "Enter the command to pull the nginx image from a registry:",
       "accepted_answers": ["docker pull nginx", "podman pull nginx"],
@@ -34,6 +35,7 @@
     {
       "challenge_id": "challenge-pod-command",
       "lesson_id": "run-first-container",
+      "prerequisites": ["beginner-first-task"],
       "topic_id": "p0-bridge-pod-deployment-service",
       "prompt": "Enter the command to run the nginx image:",
       "accepted_answers": ["docker run nginx", "podman run nginx"],
@@ -43,6 +45,7 @@
     {
       "challenge_id": "challenge-pandas-load",
       "lesson_id": "load-first-dataset",
+      "prerequisites": ["run-first-container"],
       "topic_id": "p1-ml-literacy-python",
       "prompt": "Enter the Python statement to load file.csv into df:",
       "accepted_answers": ["df = pd.read_csv('file.csv')", "df = pd.read_csv(\"file.csv\")"],
@@ -52,6 +55,7 @@
     {
       "challenge_id": "challenge-dvc-add",
       "lesson_id": "track-first-dataset",
+      "prerequisites": ["load-first-dataset"],
       "topic_id": "p2-mlops-dvc",
       "prompt": "Enter the DVC command to track data.csv:",
       "accepted_answers": ["dvc add data.csv"],
@@ -61,6 +65,7 @@
     {
       "challenge_id": "challenge-argo-workflow",
       "lesson_id": "apply-first-workflow",
+      "prerequisites": ["track-first-dataset"],
       "topic_id": "p3-k8s-argoworkflows",
       "prompt": "Enter the kubectl command to apply workflow.yaml:",
       "accepted_answers": ["kubectl apply -f workflow.yaml"],
@@ -70,6 +75,7 @@
     {
       "challenge_id": "challenge-vllm-launch",
       "lesson_id": "launch-first-vllm-server",
+      "prerequisites": ["apply-first-workflow"],
       "topic_id": "p4-llmops-vllm",
       "prompt": "Enter the command to start the vLLM OpenAI-compatible server for model-name:",
       "accepted_answers": ["python -m vllm.entrypoints.openai.api_server --model model-name"],

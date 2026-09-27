@@ -35,8 +35,8 @@ def test_t002_three_distinguishable_production_results(tmp_path):
 
         assert result.returncode == expected_code, result.stderr
         assert expected_message in result.stdout
-        assert data["completed"] == expected_completed
+        assert data["completed_lessons"] == expected_completed
         assert data["attempts"] == 1
-        outcomes.append((result.returncode, expected_message, tuple(data["completed"])))
+        outcomes.append((result.returncode, expected_message, tuple(data["completed_lessons"])))
 
     assert len(set(outcomes)) == 3

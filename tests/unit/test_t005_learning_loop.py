@@ -46,8 +46,8 @@ def test_first_attempt_does_not_reveal_full_solution(tmp_path):
     assert "docker pull nginx" not in before_reveal
     assert "podman pull nginx" not in before_reveal
     assert state["attempts"] == 0
-    assert state["completed"] == []
-    assert state["revealed"] == ["beginner-first-task"]
+    assert state["completed_lessons"] == []
+    assert state["revealed_lessons"] == ["beginner-first-task"]
 
 
 def test_wrong_then_correct_has_concept_feedback_retry_and_explanation(tmp_path):
@@ -62,8 +62,8 @@ def test_wrong_then_correct_has_concept_feedback_retry_and_explanation(tmp_path)
     assert "Why it is correct:" in output
     assert "targets the requested nginx image" in output
     assert state["attempts"] == 2
-    assert state["completed"] == ["beginner-first-task"]
-    assert state["revealed"] == []
+    assert state["completed_lessons"] == ["beginner-first-task"]
+    assert state["revealed_lessons"] == []
 
 
 def test_three_failures_show_remediation_and_related_example_once(tmp_path):
@@ -79,7 +79,7 @@ def test_three_failures_show_remediation_and_related_example_once(tmp_path):
     assert output.count("Related example:") == 1
     assert "type 'show answer'" in output
     assert state["attempts"] == 4
-    assert state["completed"] == ["beginner-first-task"]
+    assert state["completed_lessons"] == ["beginner-first-task"]
 
 
 def test_reveal_is_idempotent_and_does_not_complete(tmp_path):
@@ -91,8 +91,8 @@ def test_reveal_is_idempotent_and_does_not_complete(tmp_path):
     _, second = session.reveal_solution()
 
     assert solution == "docker pull nginx"
-    assert first["completed"] == []
-    assert second["revealed"] == ["beginner-first-task"]
+    assert first["completed_lessons"] == []
+    assert second["revealed_lessons"] == ["beginner-first-task"]
     assert second["attempts"] == 0
 
 
@@ -116,4 +116,4 @@ def test_real_launcher_allows_beginner_to_recover_after_hint(tmp_path):
     assert "Why it is correct:" in result.stdout
     state = json.loads(state_path.read_text(encoding="utf-8"))
     assert state["attempts"] == 2
-    assert state["completed"] == ["beginner-first-task"]
+    assert state["completed_lessons"] == ["beginner-first-task"]

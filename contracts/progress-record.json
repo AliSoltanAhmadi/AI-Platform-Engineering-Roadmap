@@ -2,10 +2,36 @@
   "feature": "Interactive CLI AI Platform Engineering Learning Tool",
   "schema_version": "1.0.0",
   "fields": {
-    "level": { "type": "string", "enum": ["beginner", "intermediate", "experienced"] },
-    "completed_lessons": { "type": "array" },
-    "quiz_results": { "items": { "question_id": "string", "score": "number[0..1]", "attempts": "integer>=1" } },
-    "path_switches": { "type": "array" },
-    "timestamps": { "type": "object" }
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "level": { "type": ["string", "null"], "enum": ["beginner", "intermediate", "experienced", null] },
+    "completed_lessons": { "type": "array", "items": "unique lesson_id strings" },
+    "quiz_results": {
+      "type": "array",
+      "items": {
+        "question_id": "unique string",
+        "score": "number[0..1]",
+        "attempts": "integer>=0",
+        "timestamp": "ISO-8601 string"
+      }
+    },
+    "attempts": { "type": "integer", "minimum": 0 },
+    "current_lesson": { "type": ["string", "null"] },
+    "path_switches": {
+      "type": "array",
+      "items": {
+        "from_level": "level string",
+        "to_level": "level string",
+        "timestamp": "ISO-8601 string"
+      }
+    },
+    "revealed_lessons": { "type": "array", "items": "unique lesson_id strings" },
+    "timestamps": {
+      "type": "object",
+      "fields": {
+        "created_at": "ISO-8601 string",
+        "updated_at": "ISO-8601 string",
+        "last_session_at": "ISO-8601 string or null"
+      }
+    }
   }
 }

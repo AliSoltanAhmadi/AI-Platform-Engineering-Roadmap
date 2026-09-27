@@ -103,4 +103,4 @@ def test_session_production_path_uses_challenge_configuration(tmp_path):
 
     assert wrong is False
     assert correct is True
-    assert data["completed"] == ["configured-lesson"]
+    assert data["completed_lessons"] == ["configured-lesson"]

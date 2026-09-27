@@ -19,14 +19,14 @@ def test_cli_smoke_real_session_init_and_scoring(tmp_path):
 
     correct, data = session.run_challenge("banana")
     assert correct is False
-    assert "beginner-first-task" not in data["completed"]
+    assert "beginner-first-task" not in data["completed_lessons"]
 
     correct, data = session.run_challenge("docker pull nginx")
     assert correct is True
-    assert data["completed"].count("beginner-first-task") == 1
+    assert data["completed_lessons"].count("beginner-first-task") == 1
 
     resumed = Session(state_path=str(progress)).resume()
-    assert resumed["completed"].count("beginner-first-task") == 1
+    assert resumed["completed_lessons"].count("beginner-first-task") == 1
 
 
 def test_cli_smoke_powerline_entry_point_fails_on_hang(tmp_path):
@@ -51,4 +51,4 @@ def test_cli_smoke_powerline_entry_point_fails_on_hang(tmp_path):
     assert "Active local model:" in result.stdout
     assert "Correct. Progress saved." in result.stdout
     data = json.loads(state_path.read_text(encoding="utf-8"))
-    assert data["completed"] == ["beginner-first-task"]
+    assert data["completed_lessons"] == ["beginner-first-task"]

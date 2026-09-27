@@ -16,6 +16,8 @@ DEFAULT_CHALLENGES_PATH = Path(__file__).resolve().parents[2] / "content" / "cha
 class ChallengeDefinition:
     challenge_id: str
     lesson_id: str
+    prompt: str
+    prerequisites: tuple[str, ...]
     accepted_answers: tuple[str, ...]
     hint: str
     hints: tuple[str, ...]
@@ -44,29 +46,47 @@ class ChallengeLoader:
         self.data = json.loads(self.path.read_text(encoding="utf-8"))
 
     def get(self, challenge_id):
-        defaults = self.data.get("normalization_defaults", {})
         for raw in self.data.get("challenges", []):
-            if raw.get("challenge_id") != challenge_id:
-                continue
-            rules = {**defaults, **raw.get("normalization", {})}
-            feedback = raw.get("feedback", {})
-            hints = tuple(feedback.get("hints", (raw.get("hint", "Review the command structure and try again."),)))
-            return ChallengeDefinition(
-                challenge_id=raw["challenge_id"],
-                lesson_id=raw["lesson_id"],
-                accepted_answers=tuple(raw.get("accepted_answers", ())),
-                hint=hints[0],
-                hints=hints,
-                concept_feedback={
-                    int(index): message
-                    for index, message in feedback.get("concepts", {}).items()
-                },
-                remediation=feedback.get("remediation", ""),
-                worked_example=feedback.get("worked_example", ""),
-                normalization=rules,
-                feedback_correct=raw.get("feedback_correct", "Correct."),
-            )
+            if raw.get("challenge_id") == challenge_id:
+                return self._build(raw)
         return None
+
+    def get_by_lesson(self, lesson_id):
+        for challenge in self.all():
+            if challenge.lesson_id == lesson_id:
+                return challenge
+        return None
+
+    def all(self):
+        return tuple(self._build(raw) for raw in self.data.get("challenges", []))
+
+    def _build(self, raw):
+        defaults = self.data.get("normalization_defaults", {})
+        rules = {**defaults, **raw.get("normalization", {})}
+        feedback = raw.get("feedback", {})
+        hints = tuple(
+            feedback.get(
+                "hints",
+                (raw.get("hint", "Review the command structure and try again."),),
+            )
+        )
+        return ChallengeDefinition(
+            challenge_id=raw["challenge_id"],
+            lesson_id=raw["lesson_id"],
+            prompt=raw.get("prompt", "Complete the challenge."),
+            prerequisites=tuple(raw.get("prerequisites", ())),
+            accepted_answers=tuple(raw.get("accepted_answers", ())),
+            hint=hints[0],
+            hints=hints,
+            concept_feedback={
+                int(index): message
+                for index, message in feedback.get("concepts", {}).items()
+            },
+            remediation=feedback.get("remediation", ""),
+            worked_example=feedback.get("worked_example", ""),
+            normalization=rules,
+            feedback_correct=raw.get("feedback_correct", "Correct."),
+        )
 
 
 class ChallengeResponder:

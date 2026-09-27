@@ -14,9 +14,10 @@ Entities derived from spec user stories and `research.md` decisions. Storage und
 ### Progress Record (persisted)
 
 - Path: `.local/state/progress.json` — schema-version field for future migrations.
-- Fields: `level` (enum: beginner|intermediate|experienced), `completed_lessons[]`, `quiz_results[]` (per-question id, score, attempts), `path_switches[]`, `timestamps`.
+- Fields: `level` (enum: beginner|intermediate|experienced), `completed_lessons[]`, `quiz_results[]` (per-question id, score, attempts, timestamp), global `attempts`, `current_lesson`, `path_switches[]`, `revealed_lessons[]`, and `timestamps` (`created_at`, `updated_at`, `last_session_at`).
 - Lifecycle: created on first session, appended across launches; never deleted without explicit learner action.
 - Validation: `level` restricted to the three enum values; arrays tolerate empty on fresh install.
+- Migration: legacy aliases (`completed`, `revealed`, `last_session`) are converted to the canonical fields on load. Same-version partial records are repaired; unsupported future versions are never downgraded or overwritten.
 
 ### Model Registry (read-only reference)
 
@@ -25,5 +26,5 @@ Entities derived from spec user stories and `research.md` decisions. Storage und
 
 ## Relationships & State Transitions
 
-- Progress Record accumulates across sessions; each lesson completion emits a quiz_result entry and advances the learner's path position.
+- Progress Record accumulates across sessions; challenge attempts update one idempotent `quiz_results` entry, and successful completion advances the learner's path position.
 - Level selection influences which content (and first interactive task) is presented; changing level via overview preserves prior progress (path_switch recorded).
