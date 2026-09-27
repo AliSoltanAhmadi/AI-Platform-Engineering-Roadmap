@@ -12,10 +12,17 @@ class ProgressStore:
         self.path = Path(path)
 
     def load(self):
-        default = {"schema_version":"1.0.0","level":None,"completed":[],"last_session":None}
+        default = {"schema_version":"1.0.0","level":None,"completed":[],"last_session":None,"attempts":0,"current_lesson":None}
         if self.path.exists():
             try:
-                return json.loads(self.path.read_text())
+                data = json.loads(self.path.read_text())
+                if data.get("schema_version") != "1.0.0":
+                    # simple migration: ensure all fields present
+                    for k,v in default.items():
+                        data.setdefault(k,v)
+                    data["schema_version"] = "1.0.0"
+                    self.save(data)
+                return data
             except Exception:
                 # Graceful: backup corrupt file, return default
                 bad = self.path.with_suffix(self.path.suffix + ".bad")

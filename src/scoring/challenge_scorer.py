@@ -12,6 +12,7 @@ class ScoreResult:
     accepted: bool
     reason_code: str
     reason: str
+    mismatch_index: int | None = None
 
 
 DEFAULT_NORMALIZATION = {
@@ -49,17 +50,21 @@ class ChallengeScorer:
         if answer_tokens in accepted_tokens:
             return ScoreResult(True, "accepted", "The command structure and arguments are valid.")
 
-        if any(
-            len(answer_tokens) < len(candidate)
-            and candidate[: len(answer_tokens)] == answer_tokens
-            for candidate in accepted_tokens
-        ):
-            return ScoreResult(False, "incomplete_command", "The command is incomplete.")
+        best_match = self._best_candidate(answer_tokens, accepted_tokens)
+        mismatch_index = self._first_mismatch(answer_tokens, best_match) if best_match else None
+        if best_match and best_match[: len(answer_tokens)] == answer_tokens:
+            return ScoreResult(
+                False,
+                "incomplete_command",
+                "The command is incomplete.",
+                mismatch_index,
+            )
 
         return ScoreResult(
             False,
             "command_mismatch",
             "The command structure or arguments do not match the task.",
+            mismatch_index,
         )
 
     @staticmethod
@@ -81,3 +86,23 @@ class ChallengeScorer:
             return shlex.split(value, posix=True)
         except ValueError:
             return None
+
+    @staticmethod
+    def _first_mismatch(answer_tokens, candidate_tokens):
+        for index, (answer_token, candidate_token) in enumerate(
+            zip(answer_tokens, candidate_tokens)
+        ):
+            if answer_token != candidate_token:
+                return index
+        return min(len(answer_tokens), len(candidate_tokens))
+
+    @classmethod
+    def _best_candidate(cls, answer_tokens, accepted_tokens):
+        if not accepted_tokens:
+            return None
+
+        def common_prefix_length(candidate):
+            mismatch = cls._first_mismatch(answer_tokens, candidate)
+            return mismatch
+
+        return max(accepted_tokens, key=common_prefix_length)

@@ -14,8 +14,22 @@
       "topic_id": "p0-bridge-docker-compose-fastapi",
       "prompt": "Enter the command to pull the nginx image from a registry:",
       "accepted_answers": ["docker pull nginx", "podman pull nginx"],
-      "hint": "Use a container runtime, its image-download subcommand, and the requested image name in that order.",
-      "feedback_correct": "Correct. You pulled the image into your local container runtime."
+      "hint": "Build the command from three parts: runtime, operation, and image name.",
+      "feedback": {
+        "concepts": {
+          "0": "The first concept to check is the container runtime.",
+          "1": "The operation must download an image rather than build or run it.",
+          "2": "The image argument must match the image requested in the task."
+        },
+        "hints": [
+          "Build the command from three parts: runtime, operation, and image name.",
+          "Use a supported container runtime followed by its image-download operation.",
+          "Keep the order runtime → download operation → requested image, with no extra prose."
+        ],
+        "remediation": "Container image commands name the runtime first, then an operation such as pulling an image, then the registry image name.",
+        "worked_example": "For a different image, `docker pull alpine` downloads Alpine without starting it."
+      },
+      "feedback_correct": "The command names a supported runtime, uses its image-download operation, and targets the requested nginx image in the correct order."
     },
     {
       "challenge_id": "challenge-pod-command",

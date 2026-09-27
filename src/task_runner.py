@@ -25,6 +25,7 @@ def show_task(task_path=None, output=print):
 def capture_answer(input_fn=input, output=print, supplied_answer=None):
     """Capture or forward one answer without scoring it."""
     output("\n--- Your answer (free response) ---")
+    output("Enter a command, or type 'show answer' to reveal the solution without completing the lesson.")
     answer = input_fn("> ") if supplied_answer is None else supplied_answer
     return answer
 

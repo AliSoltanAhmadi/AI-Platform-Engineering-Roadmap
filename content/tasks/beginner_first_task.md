@@ -17,5 +17,5 @@ A practical career upgrade path for DevOps / Platform / SRE engineers moving int
 - P5 Portfolio (end-to-end project)
 
 ## First Challenge
-Pull a container image to begin practice.
-Answer with the command, e.g. `docker pull nginx` or `podman pull nginx`.
+Pull the `nginx` container image to begin practice.
+Enter only the command you would run. Think about the runtime, the operation, and the requested image.

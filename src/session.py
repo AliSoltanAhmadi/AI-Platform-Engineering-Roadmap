@@ -34,6 +34,7 @@ class Session:
                     "schema_version": "1.0.0",
                     "level": None,
                     "completed": [],
+                    "revealed": [],
                     "last_session": None,
                     "attempts": 0,
                 }
@@ -55,8 +56,8 @@ class Session:
     def select_model(self):
         return self.model_selector.select()
 
-    def evaluate_challenge(self, answer, challenge_id=DEFAULT_CHALLENGE_ID):
-        outcome = self.challenge_responder.evaluate(challenge_id, answer)
+    def evaluate_challenge(self, answer, challenge_id=DEFAULT_CHALLENGE_ID, feedback_stage=1):
+        outcome = self.challenge_responder.evaluate(challenge_id, answer, feedback_stage)
         challenge = self.challenge_responder.loader.get(challenge_id)
         data = self.store.load()
         data["attempts"] = data.get("attempts", 0) + 1
@@ -67,6 +68,18 @@ class Session:
             data["last_session"] = datetime.now(timezone.utc).isoformat()
         self.store.save(data)
         return outcome, data
+
+    def reveal_solution(self, challenge_id=DEFAULT_CHALLENGE_ID):
+        challenge = self.challenge_responder.loader.get(challenge_id)
+        if challenge is None or not challenge.accepted_answers:
+            return None, self.store.load()
+        data = self.store.load()
+        revealed = data.setdefault("revealed", [])
+        if challenge.lesson_id not in revealed:
+            revealed.append(challenge.lesson_id)
+        data["last_session"] = datetime.now(timezone.utc).isoformat()
+        self.store.save(data)
+        return challenge.accepted_answers[0], data
 
     def run_challenge(self, answer):
         """Compatibility wrapper for callers that only consume pass/fail."""
@@ -127,13 +140,27 @@ def run_cli(args, input_fn=input, output=print):
         output("Input ended before the challenge was answered.")
         return 130
 
+    failed_attempts = 0
+    remediation_shown = False
     while True:
+        if str(answer).strip().casefold() == "show answer":
+            solution, _ = session.reveal_solution()
+            if solution is None:
+                output("The solution is currently unavailable.")
+                return 2
+            output(f"Worked solution: {solution}")
+            output("This lesson is marked as revealed, not completed. Retry it later to complete it.")
+            return 4
+
         # The answer returned by task_runner is scored in the production path.
-        outcome, _ = session.evaluate_challenge(answer)
+        outcome, _ = session.evaluate_challenge(answer, feedback_stage=failed_attempts + 1)
         if outcome.accepted:
             output("Correct. Progress saved.")
+            if outcome.feedback_correct:
+                output(f"Why it is correct: {outcome.feedback_correct}")
             return 0
 
+        failed_attempts += 1
         if outcome.reason_code == "empty_answer":
             output("No answer provided. Progress was not completed.")
             if args.non_interactive:
@@ -144,6 +171,14 @@ def run_cli(args, input_fn=input, output=print):
                 output(f"Hint: {outcome.hint}")
             if args.non_interactive:
                 return 2
+
+        if failed_attempts >= 3 and not remediation_shown:
+            if outcome.remediation:
+                output(f"Explanation: {outcome.remediation}")
+            if outcome.worked_example:
+                output(f"Related example: {outcome.worked_example}")
+            output("Retry now, or type 'show answer' to reveal this challenge's solution.")
+            remediation_shown = True
 
         try:
             answer = capture_answer(input_fn=input_fn, output=output)

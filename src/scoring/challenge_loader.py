@@ -18,6 +18,10 @@ class ChallengeDefinition:
     lesson_id: str
     accepted_answers: tuple[str, ...]
     hint: str
+    hints: tuple[str, ...]
+    concept_feedback: dict[int, str]
+    remediation: str
+    worked_example: str
     normalization: dict
     feedback_correct: str
 
@@ -29,6 +33,9 @@ class ChallengeOutcome:
     reason: str
     hint: str | None
     retry: bool
+    feedback_correct: str = ""
+    remediation: str = ""
+    worked_example: str = ""
 
 
 class ChallengeLoader:
@@ -42,11 +49,20 @@ class ChallengeLoader:
             if raw.get("challenge_id") != challenge_id:
                 continue
             rules = {**defaults, **raw.get("normalization", {})}
+            feedback = raw.get("feedback", {})
+            hints = tuple(feedback.get("hints", (raw.get("hint", "Review the command structure and try again."),)))
             return ChallengeDefinition(
                 challenge_id=raw["challenge_id"],
                 lesson_id=raw["lesson_id"],
                 accepted_answers=tuple(raw.get("accepted_answers", ())),
-                hint=raw.get("hint", "Review the command structure and try again."),
+                hint=hints[0],
+                hints=hints,
+                concept_feedback={
+                    int(index): message
+                    for index, message in feedback.get("concepts", {}).items()
+                },
+                remediation=feedback.get("remediation", ""),
+                worked_example=feedback.get("worked_example", ""),
                 normalization=rules,
                 feedback_correct=raw.get("feedback_correct", "Correct."),
             )
@@ -58,7 +74,7 @@ class ChallengeResponder:
         self.loader = loader or ChallengeLoader()
         self.scorer = scorer or ChallengeScorer()
 
-    def evaluate(self, challenge_id, answer):
+    def evaluate(self, challenge_id, answer, feedback_stage=1):
         challenge = self.loader.get(challenge_id)
         if challenge is None:
             return ChallengeOutcome(
@@ -82,19 +98,25 @@ class ChallengeResponder:
             challenge.accepted_answers,
             challenge.normalization,
         )
+        reason = challenge.concept_feedback.get(result.mismatch_index, result.reason)
+        hint_index = min(max(feedback_stage, 1) - 1, len(challenge.hints) - 1)
+        hint = self._safe_text(challenge.hints[hint_index], challenge)
         return ChallengeOutcome(
             accepted=result.accepted,
             reason_code=result.reason_code,
-            reason=result.reason,
-            hint=None if result.accepted else self._safe_hint(challenge),
+            reason=result.reason if result.accepted else reason,
+            hint=None if result.accepted else hint,
             retry=not result.accepted,
+            feedback_correct=challenge.feedback_correct,
+            remediation=challenge.remediation,
+            worked_example=self._safe_text(challenge.worked_example, challenge),
         )
 
     @staticmethod
-    def _safe_hint(challenge):
-        normalized_hint = " ".join(challenge.hint.casefold().split())
+    def _safe_text(text, challenge):
+        normalized_text = " ".join(text.casefold().split())
         for answer in challenge.accepted_answers:
             normalized_answer = " ".join(answer.casefold().split())
-            if normalized_answer and normalized_answer in normalized_hint:
+            if normalized_answer and normalized_answer in normalized_text:
                 return "Review the command structure and the requested image, then try again."
-        return challenge.hint
+        return text

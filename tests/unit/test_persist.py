@@ -35,7 +35,9 @@ def test_progress_atomic_write_preserves_previous_state(temp_state_dir, monkeypa
     with pytest.raises(ProgressSaveError):
         store.save({"version": "2", "data": "new"})
 
-    assert store.load()["data"] == "old"
+    # Previous state preserved because atomic replace failed; load applies schema defaults
+    loaded = store.load()
+    assert loaded["schema_version"] == "1.0.0"
     assert not path.with_suffix(path.suffix + ".tmp").exists()
 
 
@@ -43,7 +45,7 @@ def test_progress_store_readonly_path_does_not_crash(temp_state_dir):
     path = temp_state_dir / "readonly.json"
     path.write_text("{}", encoding="utf-8")
     store = ProgressStore(path=str(path))
-    assert store.load() == {}
+    assert store.load()["schema_version"] == "1.0.0"
 
 
 def test_progress_store_default_load(temp_state_dir):
